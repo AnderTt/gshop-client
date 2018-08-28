@@ -11,9 +11,10 @@ export default {
   components : {
     FooterGuide
   },
-  async mounted (){
-    const result =await reqAddress('45.10038,116.36867');
-    console.log(result);
+  mounted (){
+    /*const result =await reqAddress('45.10038,116.36867');
+    console.log(result);*/
+    this.$store.dispatch('getAddress');
   }
 }
 </script>

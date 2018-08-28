@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import HeaderTop from './components/HeaderTop/HeaderTop.vue'
+import store from './store'
 
 Vue.config.productionTip = false
 
@@ -15,5 +16,6 @@ new Vue({
   /* components: { App },
   template: '<App/>' */
   render : h=>h(App),
-  router
+  router, //为所有的组件添加$router/$route属性
+  store //为所有的组件添加$store属性
 })
