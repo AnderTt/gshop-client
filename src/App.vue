@@ -6,11 +6,16 @@
 </template>
 <script>
   import FooterGuide from './components/FooterGuide/FooterGuide.vue'
+  import {reqAddress} from './api'
 export default {
   components : {
     FooterGuide
+  },
+  async mounted (){
+    const result =await reqAddress('45.10038,116.36867');
+    console.log(result);
   }
 }
-</script>s
+</script>
 <style lang="stylus" rel="stylesheet/stylus">
 </style>
