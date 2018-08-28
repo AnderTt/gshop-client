@@ -1,10 +1,16 @@
 <template>
-  <div>APP</div>
+  <div id="app">
+    <router-view/>
+    <FooterGuide/>
+  </div>
 </template>
 <script>
+  import FooterGuide from './components/FooterGuide/FooterGuide.vue'
 export default {
-
+  components : {
+    FooterGuide
+  }
 }
-</script>
+</script>s
 <style lang="stylus" rel="stylesheet/stylus">
 </style>
