@@ -12,8 +12,7 @@ export default function ajax(url,data={},type='GET') {
     if(type==='GET') {
       // 根据data来拼query参数串
       let queryStr = '';
-      // /username=tt&age=20
-      // data={usename:'tt',age : 20}
+      // /username=tt&age=20 // data={usename:'tt',age : 20}
       //Object.keys(data) : 得到指定对象自身所有属性名组成的数组   ['username', 'password']
       Object.keys(data).forEach(key => {
         const value = data[key];
