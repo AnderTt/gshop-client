@@ -6,6 +6,10 @@ import Search from '../views/Search/Search.vue'
 import Order from '../views/Order/Order.vue'
 import Profile from '../views/Profile/Profile.vue'
 import Login from '../views/Login/Login.vue'
+import Shops from '../views/Shops/Shops.vue'
+import ShopGoods from '../views/Shops/ShopGoods/ShopGoods.vue'
+import ShopRatings from '../views/Shops/ShopRatings/ShopRatings.vue'
+import ShopInfo from '../views/Shops/ShopInfo/ShopInfo.vue'
 
 Vue.use(VueRouter)
 
@@ -46,6 +50,28 @@ export default new VueRouter({
     {
       path : '/',
       redirect : '/msite'
+    },
+    {
+      path : '/shop',
+      component : Shops,
+      children : [
+        {
+          path : '/shop/goods',
+          component : ShopGoods,
+        },
+        {
+          path : '/shop/ratings',
+          component : ShopRatings,
+        },
+        {
+          path : '/shop/info',
+          component : ShopInfo,
+        },
+        {
+          path : '',
+          component : ShopGoods,
+        }
+      ]
     },
   ]
 })

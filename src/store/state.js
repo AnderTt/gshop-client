@@ -3,5 +3,6 @@ export default {
   latitude : '116.36867',
   address : {},
   categorys : [],
-  shops : []
+  shops : [],
+  user : {}
 }
