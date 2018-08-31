@@ -28,3 +28,12 @@ export const reqUser = () => ajax(BASE + '/userinfo');
 
 //7，退出登录
 export const reqLogOut = ()=> ajax(BASE + "/logout");
+
+//8，获取商店列表
+export const reqShopGoods = () => ajax('/goods')
+
+//9，获取商店评论
+export const reqShopRatings = () => ajax('/ratings')
+
+//10，获取商店详情
+export const reqShopInfo = () => ajax('/info')

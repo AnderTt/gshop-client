@@ -4,14 +4,20 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_USER,
   GET_USER,
-  RESET_USER
+  RESET_USER,
+  RECEIVE_GOODS,
+  RECEIVE_RATINGS,
+  RECEIVE_INFO
 } from './mutation-types'
 import {
   reqAddress,
   reqCategorys,
   reqShops,
   reqUser,
-  reqLogOut
+  reqLogOut,
+  reqShopGoods,
+  reqShopRatings,
+  reqShopInfo
 } from '../api'
 
 export default {
@@ -40,7 +46,6 @@ export default {
   saveUser({commit},user){
    commit(RECEIVE_USER,{user})
   },
-
   //4.异步获取用户信息
   async getUser({commit}){
     const result = await reqUser();
@@ -49,12 +54,35 @@ export default {
       commit(GET_USER,{user})
     }
   },
-
   //5.异步退步登录
   async logout({commit}){
       const result = await reqLogOut();
       if(result.code===0){
         commit(RESET_USER)
       }
+  },
+  //6，获取商店列表
+  async getShopGoods({commit}){
+    const result = await reqShopGoods()
+    if(result.code===0){
+      const goods = result.data;
+      commit(RECEIVE_GOODS,{goods})
+    }
+  },
+  //7，获取评论列表
+  async getShopRatings({commit}){
+    const result = await reqShopRatings()
+    if(result.code===0){
+      const ratings = result.data;
+      commit(RECEIVE_RATINGS,{ratings})
+    }
+  },
+  //8，获取商店详情
+  async getShopInfo({commit}){
+    const result = await reqShopInfo()
+    if(result.code===0){
+      const info = result.data;
+      commit(RECEIVE_INFO,{info})
+    }
   }
 }

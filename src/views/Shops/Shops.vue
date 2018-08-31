@@ -3,13 +3,14 @@
       <ShopHeader/>
       <div class="tab">
         <div class="tab-item">
-          <router-link to="/shop/goods">点餐</router-link>
+          <!--设置 replace 属性的话，当点击时，会调用 router.replace() 而不是 router.push()，于是导航后不会留下 history 记录。-->
+          <router-link to="/shop/goods" replace>点餐</router-link>
         </div>
         <div class="tab-item">
-          <router-link to="/shop/ratings">评论</router-link>
+          <router-link to="/shop/ratings" replace>评论</router-link>
         </div>
         <div class="tab-item">
-          <router-link to="/shop/info">商家</router-link>
+          <router-link to="/shop/info" replace>商家</router-link>
         </div>
       </div>
       <router-view/>
@@ -20,6 +21,10 @@
   export default {
     components : {
       ShopHeader
+    },
+    mounted(){
+      //分发一个异步获取商家详情的action
+      this.$store.dispatch('getShopInfo');
     }
   }
 </script>
