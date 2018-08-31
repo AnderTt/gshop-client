@@ -7,6 +7,7 @@
 <script>
   import FooterGuide from './components/FooterGuide/FooterGuide.vue'
   import {reqAddress} from './api'
+  import axios from 'axios'
 export default {
   components : {
     FooterGuide
@@ -18,7 +19,10 @@ export default {
     this.$store.dispatch('getAddress');
     //分发一个获取用户信息的action
     this.$store.dispatch('getUser');
-
+    axios.get('/goods')
+      .then(response=>{
+        console.log(response);
+      })
   }
 }
 </script>
