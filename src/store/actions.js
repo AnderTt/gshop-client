@@ -62,11 +62,12 @@ export default {
       }
   },
   //6，获取商店列表
-  async getShopGoods({commit}){
+  async getShopGoods({commit},cb){
     const result = await reqShopGoods()
     if(result.code===0){
       const goods = result.data;
       commit(RECEIVE_GOODS,{goods})
+      cb && cb()
     }
   },
   //7，获取评论列表

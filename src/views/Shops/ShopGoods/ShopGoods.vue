@@ -1,10 +1,14 @@
 <template>
   <div>
     <div class="goods">
+      <!--左侧-->
       <div class="menu-wrapper">
-        <ul>
-          <!--current-->
-          <li class="menu-item" v-for="(good,index) in goods">
+        <ul ref="leftUl">
+          <!--current currentIndex当前分类的下标，当li的下标等于currentIndex时，添加current类名-->
+          <li class="menu-item" v-for="(good,index) in goods"
+              :class="{current : currentIndex===index}"
+              @click = 'selectItem(index)'
+          >
             <span class="text bottom-border-1px">
               <img class="icon" v-if="good.icon" :src="good.icon">
               {{good.name}}
@@ -12,8 +16,9 @@
           </li>
         </ul>
       </div>
+      <!--右侧-->
       <div class="foods-wrapper">
-        <ul>
+        <ul ref="rightUl">
           <li class="food-list-hook" v-for="(good,index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
@@ -48,15 +53,101 @@
   import {mapState} from 'vuex'
   import BScroll from 'better-scroll'
   export default {
+    data(){
+      return {
+        scrollY : 0, //右侧滑动的距离
+        tops : [] //右侧所有li的高度
+      }
+    },
     mounted(){
       //分发一个异步获取goods的action
-      this.$store.dispatch('getShopGoods')
+
       //创建BScroll对象使左右两边滚动起来
-      new BScroll('.menu-wrapper')
-      new BScroll('.foods-wrapper')
+      //正常情况下，我们要监视goods的变化，并在列表更新后才创建BScroll对象，负责可能加载不出来，
+      // 现在better-scroll现在的版本已经帮我们全部封装好了，我们可以直接用
+      //单位保证没有一点问题，我们还是要按照之前的办法，来创建BScroll对象
+      //还有一种方法：callBack + $nextTick的方法
+      this.$store.dispatch('getShopGoods',()=>{
+        //列表更新之后
+        this.$nextTick(()=>{
+          //初始化创建BScroll对象
+          this._initBScroll();
+          //初始化获取右侧所有li的高度
+          this._initTops();
+        })
+      });
     },
     computed : {
-      ...mapState(['goods'])
+      ...mapState(['goods']),
+      //currentIndex是通过scrollY和tops就算而来
+      currentIndex(){
+        const {scrollY,tops} = this;
+        const index = tops.findIndex((top,index)=>scrollY>=top && scrollY<tops[index+1]);
+
+        // 只有当index变化时才滑动
+        if(index!==BScroll.index) {
+          BScroll.index = index
+          this._scrollLeftList(index)
+        }
+
+        return index
+      }
+    },
+    methods : {
+      //methods里面一般都是回调函数，写一般函数时为了与它有区别通常在函数名前面加'_'
+      //1.初始化创建BScroll
+      _initBScroll(){
+        //将这两个BScroll实例对象挂载在this上，这样在函数外面也可以使用在这两个对象
+        this.leftScroll = new BScroll('.menu-wrapper',{
+          click : true
+        });
+        this.rightScroll = new BScroll('.foods-wrapper',{
+          click : true,
+          /*probeType : 1*/
+        });
+        //给右侧添加scroll事件监听
+       /* this.rightScroll.on('scroll',({x, y})=>{
+          console.log('scroll',{x, y})
+          this.scrollY = Math.abs(y)
+        });*/
+        this.rightScroll.on('scrollEnd',({x, y})=>{
+          console.log('scroll',{x, y})
+          this.scrollY = Math.abs(y)
+        })
+
+      },
+      //2.初始化获取所有li的高度
+      _initTops(){
+          const lis = this.$refs.rightUl.getElementsByClassName('food-list-hook');
+          const tops = [];
+          let top = 0;
+          tops.push(top);
+          //Array.from(lis)
+          Array.prototype.slice.call(lis).forEach(li=>{
+            top += li.clientHeight;
+            tops.push(top);
+          })
+        //更新状态
+        this.tops = tops;
+      },
+
+      //3.点击左侧右侧滑动到对应的位置
+      selectItem(index){
+        //得到目标高度
+        const top = this.tops[index];
+        //更新scrollY的状态
+        //this.scrollY = top;
+        //右侧滑动到top高度出,其实就是改变scrollY的值
+        this.rightScroll.scrollTo(0,-top,300)
+      },
+
+      // 4.滑动左侧列表到指定下标分类处(尽量, 至少保证可见)
+      _scrollLeftList(index){
+        const li = this.$refs.leftUl.children[index];
+        if(this.leftScroll){
+          this.leftScroll.scrollToElement(li,300)
+        }
+      }
     }
   }
 </script>
