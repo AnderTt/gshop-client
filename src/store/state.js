@@ -8,4 +8,5 @@ export default {
   goods : [],
   ratings : [],
   info : {},
+  cartFoods : []  //购物车里的食品
 }

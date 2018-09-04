@@ -8,9 +8,11 @@ import {
   RESET_USER,
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
-  RECEIVE_INFO
+  RECEIVE_INFO,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT
 } from './mutation-types'
-
+import Vue from 'vue'
 export default {
   [RECEIVE_ADDRESS](state,{address}){
     state.address = address
@@ -38,5 +40,26 @@ export default {
   },
   [RECEIVE_INFO](state,{info}){
     state.info = info
+  },
+  [INCREMENT_FOOD_COUNT](state,{food}){
+    if(!food.count){
+      //food.count=1 第一次增加时, 没有count
+      //添加count属性, 并指定为1
+      // 问题: 新添加的属性没有数据劫持==>数据绑定==>更新了数据但界面不变
+      //解决： Vue.set(target,key,value) // vue.set(target,key,value)
+      Vue.set(food,'count',1);
+      state.cartFoods.push(food);
+    }else {
+      food.count++
+    }
+  },
+  [DECREMENT_FOOD_COUNT](state,{food}){
+    if(food.count){
+      food.count--;
+      if(food.count===0){
+        state.cartFoods.splice(state.cartFoods.indexOf(food),1)
+      }
+    }
+
   },
 }

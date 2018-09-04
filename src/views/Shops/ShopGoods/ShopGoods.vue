@@ -22,7 +22,7 @@
           <li class="food-list-hook" v-for="(good,index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food,index) in good.foods">
+              <li class="food-item bottom-border-1px" v-for="(food,index) in good.foods" @click="showFood(food)">
                 <div class="icon">
                   <img width="57" height="57"
                        :src="food.icon">
@@ -38,7 +38,7 @@
                     <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -46,18 +46,31 @@
           </li>
         </ul>
       </div>
+      <!--购物车-->
+      <ShopCart/>
     </div>
+    <!--放大食物-->
+    <Food :food="food" ref="food"/>
   </div>
 </template>
 <script>
   import {mapState} from 'vuex'
   import BScroll from 'better-scroll'
+  import CartControl from '../../../components/CartControl/CartControl.vue'
+  import Food from '../../../components/Food/Food.vue'
+  import ShopCart from '../../../components/ShopCart/ShopCart.vue'
   export default {
     data(){
       return {
         scrollY : 0, //右侧滑动的距离
-        tops : [] //右侧所有li的高度
+        tops : [],//右侧所有li的高度
+        food : {} //放大展示的food
       }
+    },
+    components: {
+      CartControl,
+      Food,
+      ShopCart
     },
     mounted(){
       //分发一个异步获取goods的action
@@ -103,26 +116,27 @@
         });
         this.rightScroll = new BScroll('.foods-wrapper',{
           click : true,
-          /*probeType : 1*/
+          probeType : 1
         });
         //给右侧添加scroll事件监听
-       /* this.rightScroll.on('scroll',({x, y})=>{
+        this.rightScroll.on('scroll',({x, y})=>{
           console.log('scroll',{x, y})
           this.scrollY = Math.abs(y)
-        });*/
+        });
         this.rightScroll.on('scrollEnd',({x, y})=>{
           console.log('scroll',{x, y})
           this.scrollY = Math.abs(y)
         })
 
       },
+
       //2.初始化获取所有li的高度
       _initTops(){
           const lis = this.$refs.rightUl.getElementsByClassName('food-list-hook');
           const tops = [];
           let top = 0;
           tops.push(top);
-          //Array.from(lis)
+          //Array.from(lis)伪数组转化为真数组ES6
           Array.prototype.slice.call(lis).forEach(li=>{
             top += li.clientHeight;
             tops.push(top);
@@ -135,18 +149,27 @@
       selectItem(index){
         //得到目标高度
         const top = this.tops[index];
-        //更新scrollY的状态
-        //this.scrollY = top;
+        //更新scrollY的状态,更快的定位到相应的位置
+        this.scrollY = top;
         //右侧滑动到top高度出,其实就是改变scrollY的值
         this.rightScroll.scrollTo(0,-top,300)
       },
 
       // 4.滑动左侧列表到指定下标分类处(尽量, 至少保证可见)
       _scrollLeftList(index){
-        const li = this.$refs.leftUl.children[index];
+        //此方法在computed属性中调用，computed属性初始时也会计算，而我们的leftScroll是在列表更新之后创建的，
+        // 所以如果不判断有没有，会报错
         if(this.leftScroll){
+          const li = this.$refs.leftUl.children[index];
           this.leftScroll.scrollToElement(li,300)
         }
+      },
+
+      //5.点击右侧li显示放大的food详情
+      showFood(food){
+        this.food = food;
+        //调用food组件的toggleShowFood方法，通过this.$refs.food获取组件对象，从而调用组件对象上的方法
+        this.$refs.food.toggleShowFood();
       }
     }
   }

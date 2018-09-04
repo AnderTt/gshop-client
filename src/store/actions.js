@@ -7,7 +7,9 @@ import {
   RESET_USER,
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
-  RECEIVE_INFO
+  RECEIVE_INFO,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT
 } from './mutation-types'
 import {
   reqAddress,
@@ -84,6 +86,14 @@ export default {
     if(result.code===0){
       const info = result.data;
       commit(RECEIVE_INFO,{info})
+    }
+  },
+  //9，更新购物车的数量(同步)
+  updateFoodCount({commit},{isAdd,food}){
+    if(isAdd){
+      commit(INCREMENT_FOOD_COUNT,{food})
+    }else {
+      commit(DECREMENT_FOOD_COUNT,{food})
     }
   }
 }
