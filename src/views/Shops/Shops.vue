@@ -25,6 +25,8 @@
     mounted(){
       //分发一个异步获取商家详情的action
       this.$store.dispatch('getShopInfo');
+      //分发一个异步获取商家评论的action
+      this.$store.dispatch('getShopRatings');
     }
   }
 </script>

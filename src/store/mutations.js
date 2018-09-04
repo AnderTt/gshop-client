@@ -4,7 +4,6 @@ import {
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
   RECEIVE_USER,
-  GET_USER,
   RESET_USER,
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
@@ -26,9 +25,6 @@ export default {
   [RECEIVE_USER](state,{user}){
     state.user = user
   },
-  [GET_USER](state,{user}){
-    state.user = user
-  },
   [RESET_USER](state){
     state.user = {}
   },
@@ -46,7 +42,7 @@ export default {
       //food.count=1 第一次增加时, 没有count
       //添加count属性, 并指定为1
       // 问题: 新添加的属性没有数据劫持==>数据绑定==>更新了数据但界面不变
-      //解决： Vue.set(target,key,value) // vue.set(target,key,value)
+      //解决： Vue.set(target,key,value) // vue.$set(target,key,value)
       Vue.set(food,'count',1);
       state.cartFoods.push(food);
     }else {

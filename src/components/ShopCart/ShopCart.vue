@@ -94,7 +94,7 @@
               this.scroll = new BScroll('.list-content',{
                 click : true
               })// 此时给ul添加style属性
-              //如果用v-if,打开关闭样式会消失，所以只能用v-show
+              //如果用v-if,打开购物车列表，再关闭样式会消失，所以只能用v-show
             } else {
               this.scroll.refresh() // 刷新(重新计算看是否需要形成滑动)
             }

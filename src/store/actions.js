@@ -3,7 +3,6 @@ import {
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
   RECEIVE_USER,
-  GET_USER,
   RESET_USER,
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
@@ -49,11 +48,12 @@ export default {
    commit(RECEIVE_USER,{user})
   },
   //4.异步获取用户信息
+
   async getUser({commit}){
     const result = await reqUser();
     if(result.code===0){
       const user = result.data;
-      commit(GET_USER,{user})
+      commit(RECEIVE_USER,{user})
     }
   },
   //5.异步退步登录
